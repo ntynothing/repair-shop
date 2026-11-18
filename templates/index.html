@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+{% block title %}Услуги{% endblock %}
+{% block content %}
+<h1>Каталог услуг</h1>
+<input id="search" type="text" placeholder="Поиск услуги" style="margin-bottom:14px">
+<div class="grid">
+{% for s in services %}
+<div class="box" data-name="{{ s.name|lower }}">
+<h2 style="margin-top:0">{{ s.name }}</h2>
+<p>{{ s.description }}</p>
+<p class="price">от {{ '%d'|format(s.price_from) }} до {{ '%d'|format(s.price_to) }} ₽</p>
+</div>
+{% endfor %}
+</div>
+<p><a class="btn" href="{{ url_for('req_new') }}">Оставить заявку на ремонт</a></p>
+{% endblock %}

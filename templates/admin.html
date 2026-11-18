@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+{% block title %}Заявки{% endblock %}
+{% block content %}
+<h1>Все заявки</h1>
+<div class="tabs"><button class="btn small" type="button" data-view="v-table">Таблица</button><button class="btn small gray" type="button" data-view="v-kanban">Kanban</button></div>
+<div class="view scroll" id="v-table"><table>
+<tr><th>№</th><th>Клиент</th><th>Устройство</th><th>Статус</th><th>Мастер</th></tr>
+{% for r in rows %}
+<tr><td><a href="{{ url_for('req_view', rid=r.id) }}">{{ r.id }}</a></td><td>{{ r.cname }}</td><td>{{ r.device_type }} {{ r.model }}</td>
+<td><span class="badge s{{ statuses.index(r.status) }}">{{ r.status }}</span></td>
+<td><form method="post" action="{{ url_for('assign') }}"><input type="hidden" name="id" value="{{ r.id }}">
+<select name="master_id" data-auto><option value="">Не назначен</option>{% for m in masters %}<option value="{{ m.id }}" {{ 'selected' if m.id==r.master_id }}>{{ m.name }}</option>{% endfor %}</select></form></td></tr>
+{% endfor %}
+</table></div>
+<div class="view kanban" id="v-kanban" style="display:none">
+{% for s in statuses %}<div class="col" data-status="{{ s }}"><h3>{{ s }}</h3>
+{% for r in rows if r.status == s %}<div class="card" draggable="true" data-id="{{ r.id }}"><b>№{{ r.id }}</b> {{ r.device_type }} {{ r.model }}<br>{{ r.cname }}<br><a href="{{ url_for('req_view', rid=r.id) }}">Открыть</a></div>{% endfor %}
+</div>{% endfor %}
+</div>
+{% endblock %}

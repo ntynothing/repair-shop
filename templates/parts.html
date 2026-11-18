@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+{% block title %}Склад{% endblock %}
+{% block content %}
+<h1>Склад запчастей</h1>
+<form method="post" class="box"><input type="hidden" name="action" value="add">
+<div class="row">
+<div><label for="n0">Название</label><input id="n0" name="name" required maxlength="80"></div>
+<div><label for="s0">Артикул</label><input id="s0" name="sku" required maxlength="30"></div>
+<div><label for="q0">Количество</label><input id="q0" name="quantity" type="number" min="0" max="100000" value="0" required></div>
+<div><label for="m0">Минимум</label><input id="m0" name="min_qty" type="number" min="0" max="100000" value="2" required></div>
+<div><label for="c0">Цена, ₽</label><input id="c0" name="price" type="number" min="0" max="1000000" required></div>
+<div><button class="btn" type="submit">Добавить</button></div></div></form>
+<div class="scroll"><table>
+<tr><th>Название</th><th>Артикул</th><th>Количество</th><th>Цена, ₽</th><th></th></tr>
+{% for p in rows %}
+<tr><form method="post"><input type="hidden" name="id" value="{{ p.id }}">
+<td>{{ p.name }}{% if p.quantity <= p.min_qty %} <span class="low">мало</span>{% endif %}</td><td>{{ p.sku }}</td>
+<td><input name="quantity" type="number" min="0" max="100000" value="{{ p.quantity }}" required></td>
+<td><input name="price" type="number" min="0" max="1000000" value="{{ '%d'|format(p.price) }}" required></td>
+<td style="white-space:nowrap"><button class="btn small" name="action" value="update" type="submit">Сохранить</button>
+<button class="btn small red" name="action" value="delete" type="submit" onclick="return confirm('Удалить запчасть?')">Удалить</button></td></form></tr>
+{% endfor %}
+</table></div>
+{% endblock %}

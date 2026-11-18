@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+{% block title %}Новая заявка{% endblock %}
+{% block content %}
+<h1>Заявка на ремонт</h1>
+<form method="post" enctype="multipart/form-data" class="box form">
+<label for="device">Тип устройства</label>
+<select id="device" name="device" required>{% for d in devices %}<option {{ 'selected' if f.get('device')==d }}>{{ d }}</option>{% endfor %}</select>
+<label for="model">Марка и модель</label><input id="model" name="model" value="{{ f.get('model','') }}" required minlength="2" maxlength="80">
+<label for="fault">Вид неисправности</label>
+<select id="fault" name="fault" required>{% for d in faults %}<option {{ 'selected' if f.get('fault')==d }}>{{ d }}</option>{% endfor %}</select>
+<label for="problem">Описание неисправности</label><textarea id="problem" name="problem" required minlength="10" maxlength="1000">{{ f.get('problem','') }}</textarea>
+<label for="photo">Фото (jpg, png, webp, до 5 МБ)</label>
+<input id="photo" name="photo" type="file" accept=".jpg,.jpeg,.png,.webp">
+<img id="preview" alt="Предпросмотр">
+<p><button class="btn" type="submit">Отправить заявку</button></p>
+</form>
+{% endblock %}

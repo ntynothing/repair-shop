@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+{% block title %}Квитанция №{{ r.id }}{% endblock %}
+{% block content %}
+<div class="receipt">
+<h1>Квитанция № {{ r.id }}</h1>
+<p>Ремонтная мастерская. Акт приёма-передачи</p>
+<p><b>Дата:</b> {{ r.created_at[:16] }}<br><b>Клиент:</b> {{ r.cname }}, {{ r.cphone }}<br>
+<b>Устройство:</b> {{ r.device_type }}, {{ r.model }}<br><b>Неисправность:</b> {{ r.problem }}<br><b>Статус:</b> {{ r.status }}</p>
+<p>Работы: {{ '%d'|format(r.work_cost) }} ₽</p>
+{% for p in used %}<p>{{ p.name }} × {{ p.qty }}: {{ '%d'|format(p.price * p.qty) }} ₽</p>{% endfor %}
+<p><b>Итого: {{ '%d'|format(r.total) }} ₽</b></p>
+<p>Проверить статус: страница «Статус заявки», номер {{ r.id }}.</p>
+<p>Подпись клиента: ____________ &nbsp; Подпись мастера: ____________</p>
+<p class="noprint"><button class="btn" id="print" type="button">Печать / сохранить в PDF</button></p>
+</div>
+{% endblock %}

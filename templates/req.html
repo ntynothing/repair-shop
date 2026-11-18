@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+{% block title %}Заявка №{{ r.id }}{% endblock %}
+{% block content %}
+<h1>Заявка №{{ r.id }}</h1>
+<div class="box">
+<div class="steps">{% for s in statuses %}<div class="step {{ 'done' if loop.index0 <= statuses.index(r.status) }}">{{ s }}</div>{% endfor %}</div>
+<p><b>Устройство:</b> {{ r.device_type }}, {{ r.model }}<br>
+<b>Неисправность:</b> {{ r.fault }}<br>
+<b>Описание:</b> {{ r.problem }}<br>
+<b>Клиент:</b> {{ r.cname }}, {{ r.cphone }}<br>
+<b>Мастер:</b> {{ r.mname or 'пока не назначен' }}<br>
+<b>Создана:</b> {{ r.created_at[:16] }}, обновлена {{ r.updated_at[:16] }}</p>
+{% if r.photo %}<img class="photo" src="{{ url_for('static', filename='uploads/' + r.photo) }}" alt="Фото устройства">{% endif %}
+<p><a class="btn small gray" href="{{ url_for('receipt', rid=r.id) }}">Квитанция</a></p>
+</div>
+<div class="box">
+<h2 style="margin-top:0">Стоимость</h2>
+<p>Работы: {{ '%d'|format(r.work_cost) }} ₽</p>
+{% for p in used %}<p>{{ p.name }} × {{ p.qty }} — {{ '%d'|format(p.price * p.qty) }} ₽</p>{% endfor %}
+<p><b>Итого: {{ '%d'|format(r.total) }} ₽</b></p>
+</div>
+{% if staff %}
+<div class="box">
+<h2 style="margin-top:0">Работа мастера</h2>
+<form method="post" class="row"><input type="hidden" name="action" value="status">
+<div><label for="status">Статус</label><select id="status" name="status">{% for s in statuses %}<option {{ 'selected' if s==r.status }}>{{ s }}</option>{% endfor %}</select></div>
+<div><button class="btn" type="submit">Сменить статус</button></div></form>
+<form method="post" class="row"><input type="hidden" name="action" value="cost">
+<div><label for="work_cost">Стоимость работ, ₽</label><input id="work_cost" name="work_cost" type="number" min="0" max="1000000" step="1" value="{{ '%d'|format(r.work_cost) }}"></div>
+<div><button class="btn" type="submit">Сохранить</button></div></form>
+<form method="post" class="row"><input type="hidden" name="action" value="part">
+<div><label for="part_id">Запчасть</label><select id="part_id" name="part_id">{% for p in parts %}<option value="{{ p.id }}">{{ p.name }} (в наличии {{ p.quantity }})</option>{% endfor %}</select></div>
+<div><label for="qty">Количество</label><input id="qty" name="qty" type="number" min="1" max="1000" value="1"></div>
+<div><button class="btn" type="submit">Списать со склада</button></div></form>
+</div>
+{% endif %}
+<div class="box">
+<h2 style="margin-top:0">Комментарии</h2>
+{% for c in comments %}<div class="comment"><small>{{ c.name }} ({{ roles[c.role] }}), {{ c.created_at[:16] }}</small><br>{{ c.text }}</div>{% else %}<p>Комментариев нет.</p>{% endfor %}
+<form method="post"><input type="hidden" name="action" value="comment">
+<label for="text">Новый комментарий</label><textarea id="text" name="text" required maxlength="500"></textarea>
+<p><button class="btn" type="submit">Добавить</button></p></form>
+</div>
+{% endblock %}

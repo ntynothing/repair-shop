@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+{% block title %}Рабочее место мастера{% endblock %}
+{% block content %}
+<h1>Назначенные заявки</h1>
+<div class="tabs"><a class="btn small {{ '' if not cur else 'gray' }}" href="{{ url_for('master') }}">Все</a>
+{% for s in statuses %}<a class="btn small {{ '' if cur==s else 'gray' }}" href="{{ url_for('master', status=s) }}">{{ s }}</a>{% endfor %}</div>
+{% if rows %}
+<div class="scroll"><table>
+<tr><th>№</th><th>Устройство</th><th>Неисправность</th><th>Статус</th><th>Итого</th><th></th></tr>
+{% for r in rows %}
+<tr><td>{{ r.id }}</td><td>{{ r.device_type }} {{ r.model }}</td><td>{{ r.fault }}</td>
+<td><form method="post" action="{{ url_for('req_view', rid=r.id) }}"><input type="hidden" name="action" value="status">
+<select name="status" data-auto>{% for s in statuses %}<option {{ 'selected' if s==r.status }}>{{ s }}</option>{% endfor %}</select></form></td>
+<td>{{ '%d'|format(r.total) }} ₽</td><td><a href="{{ url_for('req_view', rid=r.id) }}">Открыть</a></td></tr>
+{% endfor %}
+</table></div>
+{% else %}<div class="box">Заявок нет.</div>{% endif %}
+{% endblock %}

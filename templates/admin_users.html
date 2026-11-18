@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+{% block title %}Пользователи{% endblock %}
+{% block content %}
+<h1>Пользователи и сотрудники</h1>
+<form method="post" class="box"><input type="hidden" name="action" value="add">
+<div class="row">
+<div><label for="n0">Имя</label><input id="n0" name="name" required maxlength="60"></div>
+<div><label for="e0">E-mail</label><input id="e0" name="email" type="email" required></div>
+<div><label for="p0">Телефон</label><input id="p0" name="phone" required></div>
+<div><label for="w0">Пароль</label><input id="w0" name="password" type="password" required minlength="6"></div>
+<div><label for="r0">Роль</label><select id="r0" name="role">{% for k, v in roles.items() %}<option value="{{ k }}" {{ 'selected' if k=='master' }}>{{ v }}</option>{% endfor %}</select></div>
+<div><button class="btn" type="submit">Добавить</button></div></div></form>
+<div class="scroll"><table>
+<tr><th>Имя</th><th>E-mail</th><th>Телефон</th><th>Роль</th><th>Активен</th><th></th></tr>
+{% for u in rows %}
+<tr><form method="post"><input type="hidden" name="action" value="update"><input type="hidden" name="id" value="{{ u.id }}">
+<td>{{ u.name }}</td><td>{{ u.email }}</td><td>{{ u.phone }}</td>
+<td><select name="role">{% for k, v in roles.items() %}<option value="{{ k }}" {{ 'selected' if k==u.role }}>{{ v }}</option>{% endfor %}</select></td>
+<td><select name="active"><option value="1" {{ 'selected' if u.active }}>Да</option><option value="0" {{ 'selected' if not u.active }}>Нет</option></select></td>
+<td><button class="btn small" type="submit">Сохранить</button></td></form></tr>
+{% endfor %}
+</table></div>
+{% endblock %}

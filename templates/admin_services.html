@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+{% block title %}Услуги{% endblock %}
+{% block content %}
+<h1>Управление услугами</h1>
+<form method="post" class="box"><input type="hidden" name="action" value="add">
+<div class="row">
+<div><label for="n0">Название</label><input id="n0" name="name" required maxlength="80"></div>
+<div><label for="d0">Описание</label><input id="d0" name="description" maxlength="300"></div>
+<div><label for="a0">Цена от</label><input id="a0" name="price_from" type="number" min="0" max="1000000" required></div>
+<div><label for="b0">Цена до</label><input id="b0" name="price_to" type="number" min="0" max="1000000" required></div>
+<div><button class="btn" type="submit">Добавить</button></div></div></form>
+<div class="scroll"><table>
+<tr><th>Название</th><th>Описание</th><th>От</th><th>До</th><th></th></tr>
+{% for s in rows %}
+<tr><form method="post"><input type="hidden" name="id" value="{{ s.id }}">
+<td><input name="name" value="{{ s.name }}" required maxlength="80"></td>
+<td><input name="description" value="{{ s.description }}" maxlength="300"></td>
+<td><input name="price_from" type="number" min="0" max="1000000" value="{{ '%d'|format(s.price_from) }}" required></td>
+<td><input name="price_to" type="number" min="0" max="1000000" value="{{ '%d'|format(s.price_to) }}" required></td>
+<td style="white-space:nowrap"><button class="btn small" name="action" value="update" type="submit">Сохранить</button>
+<button class="btn small red" name="action" value="delete" type="submit" onclick="return confirm('Удалить услугу?')">Удалить</button></td></form></tr>
+{% endfor %}
+</table></div>
+{% endblock %}

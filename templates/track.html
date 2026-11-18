@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+{% block title %}Статус заявки{% endblock %}
+{% block content %}
+<h1>Проверка статуса заявки</h1>
+<form method="post" class="box form">
+<label for="id">Номер заявки</label><input id="id" name="id" type="number" min="1" required>
+<label for="phone">Последние 4 цифры телефона</label><input id="phone" name="phone" required minlength="4" maxlength="20">
+<p><button class="btn" type="submit">Проверить</button></p>
+</form>
+{% if r %}<div class="box"><b>Заявка №{{ r.id }}</b>, {{ r.device_type }} {{ r.model }}<br>
+Статус: <span class="badge s{{ statuses.index(r.status) }}">{{ r.status }}</span><br>Обновлена: {{ r.updated_at[:16] }}</div>{% endif %}
+{% endblock %}
